@@ -102,8 +102,9 @@ def get_ini_file_value(path, section, option):
 
 # 设置ini配置文件的[section]
 def set_ini_config_section(config_name, section):
-    f = open('config/' + config_name, 'w')
+    f = open('config/' + config_name, 'r+')
     config = configparser.ConfigParser()
+    config.read("config/" + config_name)
     config.add_section(section)
     config.write(f)
     f.close()
@@ -111,8 +112,9 @@ def set_ini_config_section(config_name, section):
 
 # 设置ini配置文件的[value]
 def set_ini_config_value(config_name, section, option, value):
-    f = open('config/' + config_name, 'w')
+    f = open('config/' + config_name, 'r+')
     config = configparser.ConfigParser()
+    config.read("config/" + config_name)
     config.set(section, option, value)
     config.write(f)
     f.close()
@@ -120,8 +122,9 @@ def set_ini_config_value(config_name, section, option, value):
 
 # 设置指定目录ini配置文件的[section]
 def add_ini_file_section(path, section):
-    f = open(path, 'w')
+    f = open(path, 'r+')
     config = configparser.ConfigParser()
+    config.read(path)
     config.add_section(section)
     config.write(f)
     f.close()
@@ -129,8 +132,9 @@ def add_ini_file_section(path, section):
 
 # 设置指定目录ini配置文件的[value]
 def set_ini_file_value(path, section, option, value):
-    f = open(path, 'w')
+    f = open(path, 'r+')
     config = configparser.ConfigParser()
+    config.read(path)
     config.set(section, option, value)
     config.write(f)
     f.close()
