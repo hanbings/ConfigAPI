@@ -1,31 +1,36 @@
 # ConfigAPI
 
-### MCDR快速创建配置文件API
+> [MCDReforged](https://github.com/Fallen-Breath/MCDReforged) 插件开发用的配置文件管理API
 
+## 使用
 
+```python
+from plugins.ConfigAPI import Config
 
-### Install / 安装它
+def on_load(server, old):
+    default = {'key': 'value'}
+    global config
+    if old is None:
+        config = Config('my_plugin_name', default)
+    else:
+        config = old.config
+```
 
-将它放至MCDR的plugins目录下 （而不是单独运行）
+注意: **实例化时需要传递默认配置的dict**
 
-MCDR：https://github.com/Fallen-Breath/MCDReforged/
+如果同一插件需要多个配置文件, 实例化对象时提供 `config_name` 参数即可
 
+## 方法
 
+| Method | Function |
+|- | - |
+| config[key] | 支持直接使用 `config[key]` 获取配置项 |
+| get(key) | 获取配置项 |
+| set(key, value) | 设置配置项的值 |
+| reload() | 从文件重载配置 |
+| reset_default() | 将所有配置恢复为默认配置 |
+| get_default(key) | 获取一项配置的默认值 |
 
-### Use / 使用它
+调用 `get` 时如果无法找到配置项会抛出 `ValueError` 异常, 提示 `key` 不在配置中
 
-| 方法名                                                    | 功能                                      | 示例                             |
-| --------------------------------------------------------- | ----------------------------------------- | -------------------------------- |
-| new_config(config_name)                                   | 在config目录创建新的配置文件              | new_config(”ConfigAPI.ini“)      |
-| new_file(path)                                            | 创建自定义目录文件                        | new_file(”config/ConfigAPI.ini”) |
-| has_config(config_name)                                   | 检查（指定）配置文件是否已经存在          | has_config(”ConfigAPI.ini”)      |
-| has_file(path)                                            | 检查文件是否已经存在                      | has_file(”config/ConfigAPI.ini”) |
-| has_ini_config_section(config_name, section)              | 检查ini配置文件[section]是否存在          | -                                |
-| has_ini_file_section(path, section)                       | 检查自定义目录的ini文件[section]是否存在  | -                                |
-| get_ini_config_value(config_name, section, option)        | 读取ini配置文件指定[section]的[value]     | -                                |
-| get_ini_file_value(path, section, option)                 | 读取指定目录ini配置文件[section]的[value] | -                                |
-| add_ini_config_section(config_name, section)              | 设置ini配置文件的[section]                | -                                |
-| set_ini_config_value(config_name, section, option, value) | 设置ini配置文件的[value]                  | -                                |
-| add_ini_file_section(path, section)                       | 设置指定目录ini配置文件的[section]        | -                                |
-| set_ini_file_value(path, section, option, value)          | 设置指定目录ini配置文件的[value]          | -                                |
-
+调用 `set` 和 `set_default` 时如果配置项未注册会抛出 `ValueError` 异常, 提示 `key` 未注册

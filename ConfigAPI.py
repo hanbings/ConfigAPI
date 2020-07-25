@@ -1,140 +1,78 @@
 # -*- coding: utf-8 -*-
-import configparser
 import os
+import yaml
 
 
-def on_load(server, old_module):
-    # Logo
-    print("\033[34m")
-    print("""
-    [ConfigAPI] ConfigAPI Hanbings 3219065882@qq.com
-    
-    _________                _____.__          _____ __________.___          
-    \\_   ___ \\  ____   _____/ ____\\__| ____   /  _  \\\\______   \\   |   
-    /    \\  \\/ /  _ \\ /    \\   __\\|  |/ ___\\ /  /_\\  \\|     ___/   | 
-    \\     \\___(  <_> )   |  \\  |  |  / /_/  >    |    \\    |   |   |     
-     \\______  /\\____/|___|  /__|  |__\\___  /\\____|__  /____|   |___|     
-            \\/            \\/        /_____/         \\/                    
-    """)
-    print("\033[0m")
-    server.logger.info('[ConfigAPI] ConfigAPI 已被加载')
-    # 作者声明
-    server.add_help_message('§l[ConfigAPI]', ' §6ConfigAPI Hanbings 3219065882@qq.com')
+class Config:
+    def __init__(self, plugin_name, default: dict, config_name=None):
+        # 注册默认项
+        self.default = default
+        # 建立该插件配置文件文件夹
+        self.dir = os.path.join('config', plugin_name)
+        if not os.path.isdir(self.dir):
+            os.mkdir(self.dir)
+        # 处理配置文件名称
+        if config_name is None:
+            config_name = plugin_name
+        self.path = os.path.join(self.dir, f'{config_name}.yml')
+        # 初始化
+        self.data = None
+        self._check()
 
+    def _check(self):
+        self._read()
+        save_flag = False
+        for key, value in self.default.items():
+            if key not in self.data.keys():
+                self.data[key] = value
+                save_flag = True
+        if save_flag:
+            self._save()
 
-# 创建新的配置文件
-def new_config(config_name):
-    f = open('config/' + config_name, 'w')
-    f.close()
+    def _read(self):
+        if os.path.isfile(self.path):
+            with open(self.path) as f:
+                self.data = yaml.safe_load(f)
+        else:
+            self.data = self.default
+            self._save()
 
+    def _save(self):
+        with open(self.path, 'w') as f:
+            yaml.dump(self.data, f)
 
-# 创建自定义目录文件
-def new_file(path):
-    f = open(path, 'w')
-    f.close()
+    def __getitem__(self, key):
+        if key not in self.data.keys():
+            raise ValueError(key + ' is not in configuration')
+        else:
+            return self.data[key]
 
+    def get(self, key):
+        if key not in self.data.keys():
+            raise ValueError(key + ' is not in configuration')
+        else:
+            return self.data[key]
 
-# 检查（指定）配置文件是否已经存在
-def has_config(config_name):
-    if not os.path.isfile("config/" + config_name):
-        return False
+    def set(self, key, value):
+        """set configuration item"""
+        if key not in self.default.keys():
+            raise ValueError(key + ' has not registered')
+        else:
+            self.data[key] = value
+            self._save()
 
+    def reload(self):
+        """reload config from file"""
+        self._check()
 
-# 检查文件是否已经存在
-def has_file(path):
-    if not os.path.isfile(path):
-        return False
+    def reset_default(self):
+        """reset all configuration to default"""
+        self.data = self.default
+        self._save()
 
-
-# 检查ini配置文件[section]是否存在
-def has_ini_config_section(config_name, section):
-    config = configparser.ConfigParser()
-    config.read('config/' + config_name)
-    if not config.has_section(section):
-        return False
-    else:
-        return True
-
-
-# 检查ini配置文件[option]是否存在
-def has_ini_config_option(config_name, section, option):
-    config = configparser.ConfigParser()
-    config.read('config/' + config_name)
-    if not config.has_option(section, option):
-        return False
-    else:
-        return True
-
-
-# 检查ini配置文件[option]是否存在
-def has_ini_file_option(path, section, option):
-    config = configparser.ConfigParser()
-    config.read(path)
-    if not config.has_option(section, option):
-        return False
-    else:
-        return True
-
-
-# 检查自定义目录的ini文件[section]是否存在
-def has_ini_file_section(path, section):
-    config = configparser.ConfigParser()
-    config.read(path)
-    if not config.has_section(section):
-        return False
-    else:
-        return True
-
-
-# 读取ini配置文件指定[section]的[value]
-def get_ini_config_value(config_name, section, option):
-    config = configparser.ConfigParser()
-    config.read("config/" + config_name)
-    return config.get(section, option)
-
-
-# 读取指定目录ini配置文件[section]的[value]
-def get_ini_file_value(path, section, option):
-    config = configparser.ConfigParser()
-    config.read(path)
-    return config.get(section, option)
-
-
-# 设置ini配置文件的[section]
-def set_ini_config_section(config_name, section):
-    f = open('config/' + config_name, 'r+')
-    config = configparser.ConfigParser()
-    config.read("config/" + config_name)
-    config.add_section(section)
-    config.write(f)
-    f.close()
-
-
-# 设置ini配置文件的[value]
-def set_ini_config_value(config_name, section, option, value):
-    f = open('config/' + config_name, 'r+')
-    config = configparser.ConfigParser()
-    config.read("config/" + config_name)
-    config.set(section, option, value)
-    config.write(f)
-    f.close()
-
-
-# 设置指定目录ini配置文件的[section]
-def add_ini_file_section(path, section):
-    f = open(path, 'r+')
-    config = configparser.ConfigParser()
-    config.read(path)
-    config.add_section(section)
-    config.write(f)
-    f.close()
-
-
-# 设置指定目录ini配置文件的[value]
-def set_ini_file_value(path, section, option, value):
-    f = open(path, 'r+')
-    config = configparser.ConfigParser()
-    config.read(path)
-    config.set(section, option, value)
-    config.write(f)
-    f.close()
+    def get_default(self, key):
+        """get default configuration item"""
+        if key not in self.data.keys():
+            raise ValueError(key + ' is not in configuration')
+        else:
+            return self.default[key]
