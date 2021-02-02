@@ -5,7 +5,7 @@
 ## 使用
 
 ```python
-from plugins.ConfigAPI import Config
+from ConfigAPI import Config
 
 def on_load(server, old):
     default = {'key': 'value'}
@@ -18,7 +18,7 @@ def on_load(server, old):
 
 注意: **实例化时需要传递默认配置的dict**
 
-如果同一插件需要多个配置文件, 实例化对象时提供 `config_name` 参数即可
+如果同一插件需要多个配置文件, 提供 `config_name` 参数即可
 
 ## 方法
 
@@ -33,4 +33,4 @@ def on_load(server, old):
 
 调用 `get` 时如果无法找到配置项会抛出 `ValueError` 异常, 提示 `key` 不在配置中
 
-调用 `set` 和 `set_default` 时如果配置项未注册会抛出 `ValueError` 异常, 提示 `key` 未注册
+调用 `set` 和 `set_default` 时如果配置项不在默认配置内会抛出 `ValueError` 异常, 提示 `key` 未注册

@@ -2,6 +2,14 @@
 import os
 import yaml
 
+PLUGIN_METADATA = {
+    'id': 'config_api',
+    'version': '0.0.1',
+    'name': 'ConfigAPI',
+    'description': 'Plugin config api',
+    'author': ['hanbings','zhang_anzhi'],
+    'link': 'https://github.com/hanbings/ConfigAPI'
+}
 
 class Config:
     def __init__(self, plugin_name, default: dict, config_name=None):
