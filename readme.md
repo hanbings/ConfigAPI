@@ -2,6 +2,10 @@
 
 > [MCDReforged](https://github.com/Fallen-Breath/MCDReforged) 插件开发用的配置文件管理API
 
+## 依赖的Python模块
+
+- PyYAML
+
 ## 使用
 
 ```python
