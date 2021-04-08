@@ -4,26 +4,23 @@ import yaml
 
 PLUGIN_METADATA = {
     'id': 'config_api',
-    'version': '0.0.1',
+    'version': '0.0.2',
     'name': 'ConfigAPI',
-    'description': 'Plugin config api',
-    'author': ['hanbings','zhang_anzhi'],
+    'description': 'Plugin config API',
+    'author': ['hanbings', 'zhang_anzhi'],
     'link': 'https://github.com/hanbings/ConfigAPI'
 }
 
+
 class Config:
-    def __init__(self, plugin_name, default: dict, config_name=None):
-        # 注册默认项
+    def __init__(self, plugin_name: str, default: dict,
+                 config_name: str = None):
         self.default = default
-        # 建立该插件配置文件文件夹
         self.dir = os.path.join('config', plugin_name)
         if not os.path.isdir(self.dir):
             os.mkdir(self.dir)
-        # 处理配置文件名称
-        if config_name is None:
-            config_name = plugin_name
+        config_name = plugin_name if config_name is None else config_name
         self.path = os.path.join(self.dir, f'{config_name}.yml')
-        # 初始化
         self.data = None
         self._check()
 
