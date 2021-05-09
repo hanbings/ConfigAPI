@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-import yaml
+import ruamel.yaml as yaml
 
 PLUGIN_METADATA = {
     'id': 'config_api',
