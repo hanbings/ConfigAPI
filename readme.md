@@ -4,7 +4,7 @@
 
 ## 依赖的Python模块
 
-- PyYAML
+- ruamel.yaml
 
 ## 使用
 

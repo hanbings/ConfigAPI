@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
-import yaml
+import ruamel.yaml as yaml
 
 PLUGIN_METADATA = {
     'id': 'config_api',
-    'version': '0.0.2',
+    'version': '0.0.3',
     'name': 'ConfigAPI',
     'description': 'Plugin config API',
     'author': ['hanbings', 'zhang_anzhi'],
